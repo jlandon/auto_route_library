@@ -29,6 +29,8 @@ extension AutoRouterX on BuildContext {
 
   void navigateBack() => RouterScope.of(this).controller.navigateBack();
 
+  void go(int delta) => RouterScope.of(this).controller.go(delta);
+
   Future<void> navigateNamedTo(String path,
           {bool includePrefixMatches = false,
           OnNavigationFailure? onFailure}) =>

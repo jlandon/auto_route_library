@@ -56,6 +56,10 @@ abstract class NavigationHistory with ChangeNotifier {
   void back();
 
   void forward();
+
+  bool canGo(int delta);
+
+  void go(int delta);
 }
 
 class WebNavigationHistory extends NavigationHistory {
@@ -82,6 +86,15 @@ class WebNavigationHistory extends NavigationHistory {
 
   @override
   void forward() => _history.forward();
+
+  @override
+  bool canGo(int delta) {
+    final newIndex = _currentIndex + delta;
+    return newIndex >= 0 && newIndex < length;
+  }
+
+  @override
+  void go(int delta) => _history.go(delta);
 
   @override
   int get length => _history.length;
@@ -171,6 +184,24 @@ class NativeNavigationHistory extends NavigationHistory {
   @override
   void forward() {
     throw FlutterError(
+      'forward navigation is not supported for non-web platforms');
+  }
+
+  @override
+  bool canGo(int delta) {
+    if (delta > 0) {
+      throw FlutterError(
         'forward navigation is not supported for non-web platforms');
+    } else {
+      return length + delta > 1;
+    }
+  }
+
+  @override
+  void go(int delta) {
+    if (canGo(delta)) {
+      _entries.removeRange(length + delta, length);
+      _router.navigateAll([_entries.last.route]);
+    }
   }
 }

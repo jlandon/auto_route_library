@@ -267,6 +267,10 @@ abstract class RoutingController with ChangeNotifier {
 
   void navigateBack() => navigationHistory.back();
 
+  bool canGo(int delta) => navigationHistory.canGo(delta);
+
+  void go(int delta) => navigationHistory.go(delta);
+
   StackRouter get root => (_parent?.root ?? this) as StackRouter;
 
   StackRouter? get parentAsStackRouter => parent<StackRouter>();
